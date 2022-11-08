@@ -1,0 +1,43 @@
+.App {
+  text-align: center;
+}
+
+.title {
+    color:#472b00;
+    font-size: 50px;
+}
+
+
+#currentFact {
+  color:#694816;
+  font-size: 30px;
+  font-display: center;
+  text-align: center;
+  padding: 50px;
+}
+
+.App-header {
+  background-color: #ffdfae;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content:baseline;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  
+}
+.pastFacts {
+  background-color: #c9ac81;
+  max-height: 3000pt;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content:baseline;
+  text-align: center;
+  font-size: 18px;
+}
+
+
+
