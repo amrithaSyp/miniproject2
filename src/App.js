@@ -1,48 +1,62 @@
 import './App.css';
+import {useEffect, useState} from 'react';
+import Fact from './Fact';
+import Pagination from './Pagination';
 
-import React from 'react';
-import {useState, useEffect} from 'react';
+function App() {
 
-function CatFacts() {
-  const [facts, setFacts] = useState([]);
-  var count = 0;
-  const initial = facts => facts.slice(0, -1);
-
-  const fetchData = async () => {
-    const response = await fetch("https://catfact.ninja/fact");
-    const data = await response.json();
-    var array = [...facts, data.fact]
-    console.log(array)
-    setFacts(array);
-
-  };
+  const [facts, setFacts] = useState({})
+  const [factArray, setFactArray] = useState([])
+  const [page, setPage] = useState(1);
+  const [num, setNum] = useState(0)
+  const [splicedArr, setSplicedArr] = useState([]);
+  var first;
+  var end;
 
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    var array = factArray;
+    first = 2 + ((page - 1) * 10);
+    end = 12 + ((page - 1) * 10);
+    var newArr = array.slice(first, end);
+    setSplicedArr(newArr);
+  }, [factArray, page, num])
   
-    return (
-        <div className = 'App-header'>
-          <p className = 'title' >Cat Facts!</p> 
-          <p id = 'currentFact'> {facts[facts.length-1]} </p>
-          <button onClick={fetchData}>Give me a fact</button>
-          <div className = 'pastFacts'> 
-            <p> Past Facts!</p>
-             {facts.map((facts, index) => (
-              <div key={index}>
-                  <p>{index + 1 }. {facts}  </p>
-              </div>
-           ))}
-          
-              {/* <p> Past Facts! </p>
-              <p className = 'pfText'> {{array.notifications.map(txt => <p>{txt}</p>)}}</p> */}
-          </div>
-        </div>
-    );
+  useEffect(() => {
+    var array = [...factArray]    
+    array.push(facts)
+    setFactArray(array);
+    fetch("https://catfact.ninja/fact")
+    .then((res) => res.json())
+    .then((data) => {
+      let newFact = {
+        fact: data.fact,
+      }
+      setFacts(newFact)});
+  }, [num])
+
+  useEffect(() => {
+    if ((num - 1) % 10 == 0 && num > 1) {
+      setPage(page + 1);
+    }
+  }, [num])
+
+  return (
+    <div className = 'App-header'>
+      <p className = 'title' >Cat Facts!</p> 
+      <p id = 'currentFact'> {facts.fact} </p>
+      <button id="getFact" onClick={() => setNum(num + 1)}>Give me a fact</button>
+      <div className = "pastFacts"> 
+      <p> Past Facts! Click to Favorite</p>
+      {splicedArr.map((e) => {
+                let x = splicedArr.indexOf(e)
+                return <Fact data={e} key={x} catFactArray={factArray} setCatFactArray={setFactArray}></Fact>;
+            })}
+      </div>
+      <div>
+      <Pagination index={page} setIndex={setPage} num={num}></Pagination>
+      </div>
+    </div>
+  );
 }
-
-
-
-
-export default CatFacts;
+export default App;
